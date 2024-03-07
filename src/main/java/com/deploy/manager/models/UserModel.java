@@ -1,5 +1,6 @@
 package com.deploy.manager.models;
 
+import com.deploy.manager.dtos.users.CreateUserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -10,8 +11,8 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@AllArgsConstructor
 public class UserModel {
 
 	@Id
@@ -21,4 +22,6 @@ public class UserModel {
 	private String username;
 	private String password;
 	private String full_name;
+
+	public UserModel(CreateUserDTO userDTO) {}
 }
