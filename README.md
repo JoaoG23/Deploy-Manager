@@ -2,7 +2,7 @@
 
 ## Escopo do Projeto
 
-O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma ferramenta que facilite e gerencie os informações deploies de aplicações. 
+O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma ferramenta que facilite e gerencie os informações deploys de aplicações. 
 
 ### Requisitos Funcionais
 
@@ -24,7 +24,9 @@ Aqui serão descritos os requisitos não funcionais do projeto, estes são os cr
 ### Tecnologias
 
 Aqui estão algumas das principais tecnologias que serão usadas neste projeto:
-
+- [ ]  Swagger
 - [ ]  Java Spring Web
 - [ ]  Lombok
 - [ ]  Spring DevTools
+- [ ]  Arquitetura REST
+- [ ]  PostgresSQL

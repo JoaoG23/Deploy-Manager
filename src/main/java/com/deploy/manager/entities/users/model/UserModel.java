@@ -1,6 +1,7 @@
-package com.deploy.manager.models;
+package com.deploy.manager.entities.users.model;
 
-import com.deploy.manager.dtos.users.CreateUserDTO;
+
+import com.deploy.manager.entities.users.dtos.UserDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,5 @@ public class UserModel {
 	private String password;
 	@NotBlank
 	private String full_name;
-	public UserModel(CreateUserDTO userDTO) {}
+	public UserModel(UserDTO userDTO) {}
 }
