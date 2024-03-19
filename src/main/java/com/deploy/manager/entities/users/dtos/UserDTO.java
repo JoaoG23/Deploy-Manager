@@ -1,4 +1,18 @@
 package com.deploy.manager.entities.users.dtos;
 
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 
-public record UserDTO(Long id ,String username, String password, String full_name) {}
+
+@Data
+public class UserDTO {
+
+	private Long id;
+
+	@NotEmpty
+	private String username;
+	@NotEmpty
+	private String password;
+	@NotEmpty
+	private String full_name;
+}
