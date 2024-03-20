@@ -1,10 +1,12 @@
 package com.deploy.manager.entities.users.controllers;
 
 
+import com.deploy.manager.entities.users.dtos.UserCreatedDTO;
 import com.deploy.manager.entities.users.dtos.UserDTO;
 import com.deploy.manager.entities.users.dtos.UserViewedDTO;
 import com.deploy.manager.entities.users.model.UserModel;
 import com.deploy.manager.entities.users.services.UserServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,19 +27,42 @@ public class UserController {
 	private UserServices userServices;
 
 	@PostMapping
-	public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<String> register(@RequestBody UserCreatedDTO userDTO) {
 
 		UserModel userModel = new UserModel();
 		BeanUtils.copyProperties(userDTO, userModel);
 
-		userServices.register(userModel);
-		return ResponseEntity.ok().body(" User created with success");
+		String response = userServices.register(userModel);
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<String> updateById(@PathVariable(value = "id") Long id, @RequestBody @Valid UserCreatedDTO userDTO) {
+
+		UserModel userModel = new UserModel();
+		BeanUtils.copyProperties(userDTO, userModel);
+
+		String response = userServices.updateById(id, userModel);
+		return ResponseEntity.ok().body(response);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> updateById(@PathVariable(value = "id") Long id) {
+
+		String response = userServices.deleteById(id);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping
 	public ResponseEntity<List<UserViewedDTO>> findAll() {
 		var users = userServices.findAll();
 		return ResponseEntity.ok().body(users);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<UserViewedDTO> findOneById(@PathVariable(value = "id") Long id) {
+		var user = userServices.findById(id);
+		return (ResponseEntity<UserViewedDTO>) ResponseEntity.ok().body(user);
 	}
 
 	@GetMapping("page")
