@@ -33,7 +33,7 @@ public class UserController {
 		BeanUtils.copyProperties(userDTO, userModel);
 
 		String response = userServices.register(userModel);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping("/{id}")
@@ -49,8 +49,8 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> updateById(@PathVariable(value = "id") Long id) {
 
-		String response = userServices.deleteById(id);
-		return ResponseEntity.ok().body(response);
+		userServices.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping
@@ -73,8 +73,5 @@ public class UserController {
 			direction = Sort.Direction.ASC) Pageable pageable) {
 		var pagesOfUsers = userServices.findAllByPage(pageable);
 		return ResponseEntity.ok().body(pagesOfUsers);
-
 	}
-
-
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -61,17 +62,19 @@ public class UserServices {
 	}
 
 	public UserViewedDTO findById(Long id) {
-		Optional<UserModel> userModel = userRepository.findById(id);
+		Optional<UserModel> userModelOptional = userRepository.findById(id);
+		if (userModelOptional.isEmpty()) {
 
-		var userDto = convertModelToUserViewedDTO(userModel);
-		return userDto;
+		}
+
+		UserModel userModel = userModelOptional.get();
+		return convertModelToUserViewedDTO(userModel);
 	}
 
-	public String deleteById(Long id) {
+	public void deleteById(Long id) {
 
-		this.validateIfUserExistsById(id);
 		userRepository.deleteById(id);
-		return null;
+
 	}
 
 
@@ -85,10 +88,11 @@ public class UserServices {
 		return userDTO;
 	}
 
-	private void validateIfUserExistsById(Long id) {
+	private void validateIfUserNotExistsById(Long id) {
 		Optional<UserModel> userFound = userRepository.findById(id);
 		if (userFound.isEmpty()) {
-			throw new ArithmeticException("User don't exist");
+			throw new NoSuchElementException("User not found with id: " + id);
 		}
 	}
+
 }
