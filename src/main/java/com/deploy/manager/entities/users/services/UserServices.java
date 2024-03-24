@@ -3,6 +3,8 @@ package com.deploy.manager.entities.users.services;
 import com.deploy.manager.entities.users.dtos.UserViewedDTO;
 import com.deploy.manager.entities.users.model.UserModel;
 import com.deploy.manager.entities.users.repository.UserRepository;
+import com.deploy.manager.infra.HandlerErros.NotFoundCustomException.NotFoundCustomException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,18 +25,14 @@ public class UserServices {
 	@Transactional
 	public String register(UserModel userModel) {
 		userRepository.save(userModel);
-		return "User Saved with success";
+		return "User saved with success";
 	}
 
 	@Transactional
 	public String updateById(Long id, UserModel userModel) {
-		Optional<UserModel> userFound = userRepository.findById(id);
-		if (userFound.isEmpty()) {
-			return "User don't exists";
-		}
-
-		userModel.setId(userFound.get().getId());
-
+		validateIfUserNotExistsById(id);
+//		userModel.setId(userFound.get().getId());
+		userModel.setId(id);
 		userRepository.save(userModel);
 		return "User updated with success";
 	}
@@ -62,19 +59,17 @@ public class UserServices {
 	}
 
 	public UserViewedDTO findById(Long id) {
+		validateIfUserNotExistsById(id);
+
 		Optional<UserModel> userModelOptional = userRepository.findById(id);
-		if (userModelOptional.isEmpty()) {
-
-		}
-
 		UserModel userModel = userModelOptional.get();
 		return convertModelToUserViewedDTO(userModel);
 	}
 
 	public void deleteById(Long id) {
+		validateIfUserNotExistsById(id);
 
 		userRepository.deleteById(id);
-
 	}
 
 
@@ -91,8 +86,7 @@ public class UserServices {
 	private void validateIfUserNotExistsById(Long id) {
 		Optional<UserModel> userFound = userRepository.findById(id);
 		if (userFound.isEmpty()) {
-			throw new NoSuchElementException("User not found with id: " + id);
+			throw new NotFoundCustomException("User not found with id: " + id);
 		}
 	}
-
 }

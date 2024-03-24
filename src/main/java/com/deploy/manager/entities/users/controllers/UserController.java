@@ -2,7 +2,6 @@ package com.deploy.manager.entities.users.controllers;
 
 
 import com.deploy.manager.entities.users.dtos.UserCreatedDTO;
-import com.deploy.manager.entities.users.dtos.UserDTO;
 import com.deploy.manager.entities.users.dtos.UserViewedDTO;
 import com.deploy.manager.entities.users.model.UserModel;
 import com.deploy.manager.entities.users.services.UserServices;
@@ -27,7 +26,7 @@ public class UserController {
 	private UserServices userServices;
 
 	@PostMapping
-	public ResponseEntity<String> register(@RequestBody UserCreatedDTO userDTO) {
+	public ResponseEntity<String> register(@RequestBody @Valid UserCreatedDTO userDTO) {
 
 		UserModel userModel = new UserModel();
 		BeanUtils.copyProperties(userDTO, userModel);
@@ -47,7 +46,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> updateById(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<String> deleteById(@PathVariable(value = "id") Long id) {
 
 		userServices.deleteById(id);
 		return ResponseEntity.noContent().build();
