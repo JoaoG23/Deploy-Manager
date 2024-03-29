@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class UserServices {
 
 	@Transactional
 	public String register(UserModel userModel) {
+		var encoderPassword = new BCryptPasswordEncoder().encode(userModel.getPassword());
+		userModel.setPassword(encoderPassword);
+
 		userRepository.save(userModel);
 		return "User saved with success";
 	}
@@ -31,7 +35,6 @@ public class UserServices {
 	@Transactional
 	public String updateById(Long id, UserModel userModel) {
 		validateIfUserNotExistsById(id);
-//		userModel.setId(userFound.get().getId());
 		userModel.setId(id);
 		userRepository.save(userModel);
 		return "User updated with success";
@@ -48,6 +51,7 @@ public class UserServices {
 		}
 		return userDTOs;
 	}
+
 	public Page<UserViewedDTO> findAllByPage(Pageable pageable) {
 		Page<UserModel> userPage = userRepository.findAll(pageable);
 
