@@ -35,7 +35,11 @@ public class UserServices {
 	@Transactional
 	public String updateById(Long id, UserModel userModel) {
 		validateIfUserNotExistsById(id);
+
+		var encoderPassword = new BCryptPasswordEncoder().encode(userModel.getPassword());
+		userModel.setPassword(encoderPassword);
 		userModel.setId(id);
+
 		userRepository.save(userModel);
 		return "User updated with success";
 	}

@@ -2,6 +2,8 @@ package com.deploy.manager.entities.users.authentication.controllers;
 
 
 import com.deploy.manager.entities.users.authentication.dtos.UserAutheticationDto;
+import com.deploy.manager.entities.users.model.UserModel;
+import com.deploy.manager.infra.TokenServices.TokenServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,18 @@ public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationManager manager; // Ao Chamar essa classe o spring chamará a classe serviceAuthentication
+
+	@Autowired
+	private TokenServices tokenServices; // Token
+
+
 	@PostMapping
 	public ResponseEntity<?> toDologin(@RequestBody @Valid UserAutheticationDto userAutheticationDto) {
 
-		var token = new UsernamePasswordAuthenticationToken(userAutheticationDto.getUsername(), userAutheticationDto.getPassword());
-		var authentication = manager.authenticate(token);
-		return ResponseEntity.ok().build();
+		var authenticationToken = new UsernamePasswordAuthenticationToken(userAutheticationDto.getUsername(), userAutheticationDto.getPassword());
+		var authentication = manager.authenticate(authenticationToken);
+
+		var tokenSession = tokenServices.generateToken((UserModel) authentication.getPrincipal()); // Busca os dados usuario para o token
+		return ResponseEntity.ok(tokenSession);
 	}
 }
