@@ -4,6 +4,7 @@ package com.deploy.manager.entities.users.authentication.controllers;
 import com.deploy.manager.entities.users.authentication.dtos.UserAutheticationDto;
 import com.deploy.manager.entities.users.model.UserModel;
 import com.deploy.manager.infra.TokenServices.TokenServices;
+import com.deploy.manager.infra.TokenServices.dtos.TokenDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,9 @@ public class AuthenticationController {
 		var authentication = manager.authenticate(authenticationToken);
 
 		var tokenSession = tokenServices.generateToken((UserModel) authentication.getPrincipal()); // Busca os dados usuario para o token
-		return ResponseEntity.ok(tokenSession);
+
+		var tokenJwtDTO = new TokenDTO();
+		tokenJwtDTO.setToken(tokenSession);
+		return ResponseEntity.ok().body(tokenJwtDTO);
 	}
 }
