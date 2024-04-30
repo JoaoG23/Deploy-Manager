@@ -5,7 +5,6 @@ import com.deploy.manager.entities.users.dtos.UserCreatedDTO;
 import com.deploy.manager.entities.users.dtos.UserViewedDTO;
 import com.deploy.manager.entities.users.model.UserModel;
 import com.deploy.manager.entities.users.services.UserServices;
-
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,9 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+
 	@Autowired
 	private UserServices userServices;
-
 
 	@PostMapping
 	public ResponseEntity<String> register(@RequestBody @Valid UserCreatedDTO userDTO) {

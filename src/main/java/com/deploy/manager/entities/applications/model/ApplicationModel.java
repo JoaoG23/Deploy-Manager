@@ -1,17 +1,18 @@
 package com.deploy.manager.entities.applications.model;
 
 
+import com.deploy.manager.entities.applications.dtos.ApplicationDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @ToString
 @Getter
 @Setter
 @Table(name = "applications")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ApplicationModel {
 
 	@Id
