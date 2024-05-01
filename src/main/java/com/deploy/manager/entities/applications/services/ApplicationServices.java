@@ -6,6 +6,7 @@ import com.deploy.manager.entities.applications.repository.ApplicationRepository
 
 import com.deploy.manager.infra.HandlerErros.NotFoundCustomException.NotFoundCustomException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,7 +25,10 @@ public class ApplicationServices {
 	private ApplicationRepository applicationRepository;
 
 	@Transactional
-	public ApplicationModel save(ApplicationModel applicationModel) {
+	public ApplicationModel create(ApplicationDTO applicationDTO) {
+
+		ApplicationModel applicationModel = new ApplicationModel();
+		BeanUtils.copyProperties(applicationDTO, applicationModel);
 		return applicationRepository.save(applicationModel);
 	}
 
@@ -32,7 +36,7 @@ public class ApplicationServices {
 	public ApplicationModel updateById(Long id, ApplicationModel applicationModel) {
 		validateIfApplicationNotExistsById(id);
 		return applicationRepository.save(applicationModel);
-		
+
 	}
 
 	public List<ApplicationDTO> findAll() {
