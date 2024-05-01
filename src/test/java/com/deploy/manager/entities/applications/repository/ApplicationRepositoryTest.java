@@ -3,9 +3,6 @@ package com.deploy.manager.entities.applications.repository;
 import com.deploy.manager.entities.applications.dtos.ApplicationDTO;
 import com.deploy.manager.entities.applications.model.ApplicationModel;
 import jakarta.persistence.EntityManager;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
@@ -13,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @DataJpaTest
@@ -28,7 +26,7 @@ class ApplicationRepositoryTest {
 
 	@Test
 	@DisplayName("Should get Application from database")
-	public void findById() {
+	public void findByIdCase1() {
 
 		ApplicationDTO applicationDTO = new ApplicationDTO();
 		applicationDTO.setNameApplication("Aplicacao Teste");
@@ -42,6 +40,15 @@ class ApplicationRepositoryTest {
 
 	}
 
+	@Test
+	@DisplayName("Should get Application from database")
+	public void findByIdcase2() {
+
+		Optional<ApplicationModel> result = applicationRepository.findById(1L);
+
+		assertThat(result.isEmpty()).isTrue();
+
+	}
 
 	// Metodos auxiliar para aplicação
 	private ApplicationModel createApplication(ApplicationDTO applicationDTO) {
@@ -49,10 +56,7 @@ class ApplicationRepositoryTest {
 		var newApplication = new ApplicationModel();
 		BeanUtils.copyProperties(applicationDTO, newApplication);
 
-		System.out.println(newApplication);
 		this.entityManager.persist(newApplication);
 		return newApplication;
 	}
-
-
 }
