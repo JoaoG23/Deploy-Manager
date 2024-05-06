@@ -4,23 +4,19 @@ import com.deploy.manager.entities.applications.dtos.ApplicationDTO;
 import com.deploy.manager.entities.applications.model.ApplicationModel;
 import com.deploy.manager.entities.applications.repository.ApplicationRepository;
 import com.deploy.manager.infra.HandlerErros.NotFoundCustomException.NotFoundCustomException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
 
 class ApplicationServicesTest {
 
@@ -66,7 +62,6 @@ class ApplicationServicesTest {
 
 		var result = applicationServices.findAll();
 
-		System.out.println(result);
 		assertThat(result.isEmpty()).isFalse();
 	}
 	@Test
@@ -78,30 +73,72 @@ class ApplicationServicesTest {
 		app.setNameApplication("App");
 		app.setDescription("Descrição da aplicação");
 
-		var appFound = applicationServices.create(app);
 		// Capturar a excessao
 		Exception thrown = Assertions.assertThrows(NotFoundCustomException.class, ()-> {
-			applicationServices.updateById(1L, appFound);
+			applicationServices.updateById(1L, app);
 		});
 		Assertions.assertEquals("Application not found with id: 1", thrown.getMessage());
 	}
 
 	@Test
-	@DisplayName("Should update apps ")
-	void updateApplicationCase1() throws Exception {
+	@DisplayName("Should update one app for id")
+	void updateApplicationCase2() throws Exception {
+
+		Long idTested = 1L;
+
+		ApplicationModel appModel = new ApplicationModel();
+		appModel.setId(idTested);
+		appModel.setNameApplication("App");
+		appModel.setDescription("Descrição da aplicação");
+
+		when(applicationRepository.findById(idTested)).thenReturn(Optional.of(appModel));
+
+		var appFound = applicationServices.updateById(idTested,applicationReturned());
+		verify(applicationRepository, times(1)).save(any());
+	}
+	@Test
+	@DisplayName("Should to delete one for id")
+	@Tag("delete")
+	void deleteApplicationCaseOne() throws Exception {
+		Long idTested = 1L;
+
+		ApplicationModel appModel = new ApplicationModel();
+		appModel.setId(idTested);
+		appModel.setNameApplication("App");
+		appModel.setDescription("Descrição da aplicação");
+
+		// Para quando essa função for executada
+		// Caso de sucesso retorna algo e não gerar uma exeção
+		when(applicationRepository.findById(idTested)).thenReturn(Optional.of(appModel));
+
+		applicationServices.deleteById(idTested);
+		verify(applicationRepository, times(1)).deleteById(any());
+	}
+
+	@Test
+	@DisplayName("Should throw exception if not exists application")
+	void deleteApplicationCase2() throws Exception {
 
 		ApplicationDTO app = new ApplicationDTO();
 		app.setId(2L);
 		app.setNameApplication("App");
 		app.setDescription("Descrição da aplicação");
 
-		var appFound = applicationServices.create(app);
 		// Capturar a excessao
 		Exception thrown = Assertions.assertThrows(NotFoundCustomException.class, ()-> {
-			applicationServices.updateById(1L, appFound);
+			applicationServices.deleteById(1L);
 		});
 		Assertions.assertEquals("Application not found with id: 1", thrown.getMessage());
 	}
 
+
+
+	private ApplicationDTO applicationReturned() {
+		ApplicationDTO app = new ApplicationDTO();
+		app.setId(1L);
+		app.setNameApplication("App");
+		app.setDescription("Descrição da aplicação");
+		return app;
+	}
 
 }

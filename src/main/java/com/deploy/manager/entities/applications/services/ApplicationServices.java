@@ -33,8 +33,11 @@ public class ApplicationServices {
 	}
 
 	@Transactional
-	public ApplicationModel updateById(Long id, ApplicationModel applicationModel) {
+	public ApplicationModel updateById(Long id, ApplicationDTO applicationDTO) {
 		validateIfApplicationNotExistsById(id);
+
+		ApplicationModel applicationModel = new ApplicationModel();
+		BeanUtils.copyProperties(applicationDTO, applicationModel);
 		return applicationRepository.save(applicationModel);
 
 	}
