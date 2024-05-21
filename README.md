@@ -11,7 +11,7 @@ Aqui serão descritos os requisitos funcionais do projeto. Estes são os comport
 - [ ]  Usuário poderá cadastrar, editar, visualizar, deletar uma empresa
 - [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma aplicação
 
-### Requisitos Não Funcionais
+### Não Funcionais
 
 Aqui serão descritos os requisitos não funcionais do projeto, estes são os critérios que não se relacionam diretamente com o comportamento específico do sistema, mas com a qualidade do sistema como um todo.
 
