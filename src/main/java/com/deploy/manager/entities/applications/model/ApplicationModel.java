@@ -1,7 +1,6 @@
 package com.deploy.manager.entities.applications.model;
 
 
-import com.deploy.manager.entities.applications.dtos.ApplicationDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

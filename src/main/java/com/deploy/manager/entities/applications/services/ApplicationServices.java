@@ -35,8 +35,9 @@ public class ApplicationServices {
 	@Transactional
 	public ApplicationModel updateById(Long id, ApplicationDTO applicationDTO) {
 		validateIfApplicationNotExistsById(id);
-
 		ApplicationModel applicationModel = new ApplicationModel();
+
+		applicationDTO.setId(id);
 		BeanUtils.copyProperties(applicationDTO, applicationModel);
 		return applicationRepository.save(applicationModel);
 
@@ -72,15 +73,16 @@ public class ApplicationServices {
 		return convertModelToApplicationDTO(applicationModel);
 	}
 
-	public void deleteById(Long id) {
+	public String deleteById(Long id) {
 		validateIfApplicationNotExistsById(id);
 		applicationRepository.deleteById(id);
+		return "Application deleted " + id;
 	}
 
 
 	private ApplicationDTO convertModelToApplicationDTO(ApplicationModel applicationModel) {
 		ApplicationDTO applicationDTO = new ApplicationDTO();
-		applicationDTO.nameApplication = applicationModel.getNameApplication();
+
 		applicationDTO.setId(applicationModel.getId());
 		applicationDTO.setNameApplication(applicationModel.getNameApplication());
 		applicationDTO.setDescription(applicationModel.getDescription());
