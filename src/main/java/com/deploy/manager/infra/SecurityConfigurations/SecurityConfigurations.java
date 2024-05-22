@@ -39,7 +39,7 @@ public class SecurityConfigurations {
 		// Outro modo de ser fazer
 		return httpSecurity.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/login").permitAll() // Verbo LOGIN = Post
-				.requestMatchers(HttpMethod.GET, "/swagger-ui").permitAll()
+				.requestMatchers(HttpMethod.GET, "/h2-console").permitAll()
 				.anyRequest().authenticated()
 				.and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
