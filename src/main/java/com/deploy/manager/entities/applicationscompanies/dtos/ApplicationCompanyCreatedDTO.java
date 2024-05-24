@@ -1,5 +1,6 @@
 package com.deploy.manager.entities.applicationscompanies.dtos;
 
+import com.deploy.manager.entities.applicationscompanies.enums.StatusApplication;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -17,5 +18,5 @@ public class ApplicationCompanyCreatedDTO {
 	private String notesBackend;
 
 	@NotEmpty
-	private String status;
+	private Enum<StatusApplication> status;
 }

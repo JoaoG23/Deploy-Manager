@@ -1,9 +1,11 @@
 package com.deploy.manager.entities.applicationscompanies.model;
 
 import com.deploy.manager.entities.applications.model.ApplicationModel;
+import com.deploy.manager.entities.applicationscompanies.enums.StatusApplication;
 import com.deploy.manager.entities.companies.model.CompanyModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,9 +35,10 @@ public class ApplicationCompanyModel {
 	@Column(name = "notes_backend")
 	private String notesBackend;
 
-	@NotBlank
+	@NotNull
 	@Column(name = "status")
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private StatusApplication status;
 }
 
 

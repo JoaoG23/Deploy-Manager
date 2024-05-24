@@ -1,6 +1,9 @@
 package com.deploy.manager.entities.applicationscompanies.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.deploy.manager.entities.applicationscompanies.enums.StatusApplication;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @AllArgsConstructor
@@ -12,16 +15,17 @@ public class ApplicationCompanyDTO {
 
 	public Long id;
 
-	@NotEmpty
+	@NotNull
 	public Long idCompanies;
 
-	@NotEmpty
+	@NotNull
 	public Long idApplications;
 
 	public String notesFrontend;
 
 	public String notesBackend;
 
-	@NotEmpty
-	public String status;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	public StatusApplication status;
 }
