@@ -4,6 +4,7 @@ import com.deploy.manager.entities.companies.dtos.CompanyDTO;
 import com.deploy.manager.entities.companies.repository.CompanyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,7 @@ class CompanyControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].nameCompany").value("Company"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("Descrição da empresa"));
 	}
+
 	@Test
 	@DisplayName("Find all by page and return success 200")
 	void findByPageCase2() throws Exception {
@@ -118,6 +120,7 @@ class CompanyControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(1));
 	}
+
 	@Test
 	@DisplayName("Find one by id and return success 200")
 	void findOneByIdCase1() throws Exception {

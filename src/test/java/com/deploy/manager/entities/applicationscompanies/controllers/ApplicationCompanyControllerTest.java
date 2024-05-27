@@ -5,13 +5,13 @@ import com.deploy.manager.entities.applications.model.ApplicationModel;
 import com.deploy.manager.entities.applications.repository.ApplicationRepository;
 import com.deploy.manager.entities.applicationscompanies.dtos.ApplicationCompanyDTO;
 import com.deploy.manager.entities.applicationscompanies.enums.StatusApplication;
-import com.deploy.manager.entities.applicationscompanies.model.ApplicationCompanyModel;
 import com.deploy.manager.entities.applicationscompanies.repository.ApplicationCompanyRepository;
 import com.deploy.manager.entities.companies.dtos.CompanyDTO;
 import com.deploy.manager.entities.companies.model.CompanyModel;
 import com.deploy.manager.entities.companies.repository.CompanyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -43,6 +44,7 @@ class ApplicationCompanyControllerTest {
 	private CompanyRepository companyRepository;
 
 	@BeforeEach
+	@AfterAll
 	void deleteAll() {
 		applicationCompanyRepository.deleteAll();
 		applicationRepository.deleteAll();
@@ -59,117 +61,149 @@ class ApplicationCompanyControllerTest {
 		var app = insertApplication();
 
 		var applicationCompanyDTO = applicationForCompanyReturned(company.getId(), app.getId());
-		System.out.println(applicationCompanyDTO);
-		var teste = mockMvc.perform(MockMvcRequestBuilders.post("/application-companies")
+		mockMvc.perform(MockMvcRequestBuilders.post("/application-companies")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
 						.content(objectMapper.writeValueAsString(applicationCompanyDTO)))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.nameApplication").value("App"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Descrição da aplicação"));
-		System.out.println(teste);
+				.andExpect(MockMvcResultMatchers.jsonPath("$.company").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.application").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.notesFrontend").value(applicationCompanyDTO.getNotesFrontend()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.notesBackend").value(applicationCompanyDTO.getNotesBackend()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("" + applicationCompanyDTO.getStatus() + ""));
+
+
+//
 	}
 
-//	@Test
-//	@DisplayName("Update an app successfully and return 200")
-//	void updateOneCase1() throws Exception {
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		String applicationString = createApplication();
-//
-//		// Transform in JSON object
-//		JSONObject application = new JSONObject(applicationString);
-//		// Access the 'id' property
-//		Long id = Long.parseLong(application.getString("id"));
-//		ApplicationCompanyDTO applicationCompanyDTO = applicationForCompanyReturned();
-//
-//		mockMvc.perform(MockMvcRequestBuilders.put("/application-companies/{id}", id)
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-//						.content(objectMapper.writeValueAsString(applicationCompanyDTO)))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
-//				.andExpect(MockMvcResultMatchers.jsonPath("$.nameApplication").value("App"))
-//				.andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Descrição da aplicação"));
-//	}
-
-//	@Test
-//	@DisplayName("Delete one app with success and return 200")
-//	void deleteOneById() throws Exception {
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		// Create App
-//		String applicationString = createApplication();
-//
-//		JSONObject application = new JSONObject(applicationString);
-//
-//		// Extract Id
-//		Long id = Long.parseLong(application.getString("id"));
-//		ApplicationCompanyDTO applicationCompanyDTO = applicationForCompanyReturned();
-//
-//		mockMvc.perform(MockMvcRequestBuilders.delete("/application-companies/{id}", id)
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.content().string("Application deleted " + id));
-//
-//	}
-
-//	@Test
-//	@DisplayName("Find all application-companies and return success 200")
-//	void findAllCase1() throws Exception {
-//		createApplication();
-//
-//		mockMvc.perform(MockMvcRequestBuilders.get("/application-companies")
-//						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.jsonPath("$[0].nameApplication").value("App"))
-//				.andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("Descrição da aplicação"));
-//	}
-
-//	@Test
-//	@DisplayName("Find all by page and return success 200")
-//	void findByPageCase2() throws Exception {
-//		createApplication();
-//		createApplication();
-//		mockMvc.perform(MockMvcRequestBuilders.get("/application-companies/page")
-//						.param("page", "0")
-//						.param("size", "1")
-//						.param("sort", "id")
-//						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(1));
-//	}
-
-//	@Test
-//	@DisplayName("Find one by id and return success 200")
-//	void findOneByIdCase1() throws Exception {
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		// Create App
-//		String applicationString = createApplication();
-//
-//		JSONObject application = new JSONObject(applicationString);
-//
-//		// Extract Id
-//		Long id = Long.parseLong(application.getString("id"));
-//		ApplicationCompanyDTO applicationCompanyDTO = applicationForCompanyReturned();
-//
-//		mockMvc.perform(MockMvcRequestBuilders.get("/application-companies/{id}", id)
-//						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.jsonPath("$.nameApplication").value("App"))
-//				.andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Descrição da aplicação"));
-//	}
-
-	private String createApplicationForCompany(Long idCompany, Long idApp) throws Exception {
+	@Test
+	@DisplayName("Update an app successfully and return 200")
+	void updateOneCase1() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
-		var applicationCompanyModel = new ApplicationCompanyModel();
 
-		ApplicationCompanyDTO applicationCompanyDTO = applicationForCompanyReturned(idCompany, idApp);
-		BeanUtils.copyProperties(applicationCompanyDTO, applicationCompanyModel);
+		var company = insertCompany();
+		var app = insertApplication();
 
-		applicationCompanyRepository.save(applicationCompanyModel);
+		String contractString = createApplicationForCompany(company.getId(), app.getId());
+		JSONObject contract = new JSONObject(contractString);
 
-		return null;
+		Long id = Long.parseLong(contract.getString("id"));
+
+		var appForCompany = new ApplicationCompanyDTO();
+		appForCompany.setCompanyId(company.getId());
+		appForCompany.setApplicationId(app.getId());
+		appForCompany.setNotesFrontend("EDITADO Front");
+		appForCompany.setNotesBackend("EDITADO Back");
+		appForCompany.setStatus(StatusApplication.valueOf("RODANDO"));
+
+		mockMvc.perform(MockMvcRequestBuilders.put("/application-companies/{id}", id)
+						.contentType(MediaType.APPLICATION_JSON)
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+						.content(objectMapper.writeValueAsString(appForCompany)))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.notesFrontend").value("EDITADO Front"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.notesBackend").value("EDITADO Back"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("RODANDO"));
 	}
+
+	@Test
+	@DisplayName("Delete one app with success and return 200")
+	void deleteOneById() throws Exception {
+		var company = insertCompany();
+		var app = insertApplication();
+
+		String contractString = createApplicationForCompany(company.getId(), app.getId());
+		JSONObject contract = new JSONObject(contractString);
+
+		Long id = Long.parseLong(contract.getString("id"));
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/application-companies/{id}", id)
+						.contentType(MediaType.APPLICATION_JSON)
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().string("Contract deleted of id " + id));
+	}
+
+	@Test
+	@DisplayName("Should find all application-companies and return success 200")
+	void findAllCase1() throws Exception {
+
+		var company = insertCompany();
+		var app = insertApplication();
+
+		createApplicationForCompany(company.getId(), app.getId());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/application-companies")
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1));
+
+	}
+
+	@Test
+	@DisplayName("Find all by page and return success 200")
+	void findByPageCase2() throws Exception {
+		var company = insertCompany();
+		var app = insertApplication();
+
+		createApplicationForCompany(company.getId(), app.getId());
+		createApplicationForCompany(company.getId(), app.getId());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/application-companies/page")
+						.param("page", "0")
+						.param("size", "2")
+						.param("sort", "id")
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(2));
+	}
+
+
+	@Test
+	@DisplayName("Find one by id and return success 200")
+	void findOneByIdCase1() throws Exception {
+
+		var company = insertCompany();
+		var app = insertApplication();
+
+		String contractString = createApplicationForCompany(company.getId(), app.getId());
+		JSONObject contract = new JSONObject(contractString);
+
+		Long id = Long.parseLong(contract.getString("id"));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/application-companies/{id}", id)
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.company.nameCompany").value(company.getNameCompany()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.company.description").value(company.getDescription()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.application.nameApplication").value(app.getNameApplication()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.application.description").value(app.getDescription()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.notesFrontend").value("Front"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.notesBackend").value("Back"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("PARADO"));
+	}
+
+
+	private String createApplicationForCompany(Long companyId, Long applicationId) throws Exception {
+	/*
+	Created this way for
+	don't instance service Class
+	 */
+		ObjectMapper objectMapper = new ObjectMapper();
+		var contract = applicationForCompanyReturned(companyId, applicationId);
+
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/application-companies")
+						.contentType(MediaType.APPLICATION_JSON)
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+						.content(objectMapper.writeValueAsString(contract)))
+				.andReturn(); // get the MvcResult
+
+		return mvcResult
+				.getResponse()
+				.getContentAsString();
+	}
+
 
 	private ApplicationModel insertApplication() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -180,6 +214,7 @@ class ApplicationCompanyControllerTest {
 
 		return applicationRepository.save(applicationModel);
 	}
+
 	private ApplicationDTO applicationReturned() {
 		ApplicationDTO app = new ApplicationDTO();
 		app.setNameApplication("App");
@@ -205,8 +240,8 @@ class ApplicationCompanyControllerTest {
 
 	private ApplicationCompanyDTO applicationForCompanyReturned(Long idCompany, Long idApp) {
 		ApplicationCompanyDTO appForCompany = new ApplicationCompanyDTO();
-		appForCompany.setIdCompanies(idCompany);
-		appForCompany.setIdApplications(idApp);
+		appForCompany.setCompanyId(idCompany);
+		appForCompany.setApplicationId(idApp);
 		appForCompany.setNotesFrontend("Front");
 		appForCompany.setNotesBackend("Back");
 		appForCompany.setStatus(StatusApplication.valueOf("PARADO"));

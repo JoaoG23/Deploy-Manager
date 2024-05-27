@@ -1,8 +1,10 @@
 package com.deploy.manager.entities.applicationscompanies.services;
 
+import com.deploy.manager.entities.applications.repository.ApplicationRepository;
 import com.deploy.manager.entities.applicationscompanies.dtos.ApplicationCompanyDTO;
 import com.deploy.manager.entities.applicationscompanies.model.ApplicationCompanyModel;
 import com.deploy.manager.entities.applicationscompanies.repository.ApplicationCompanyRepository;
+import com.deploy.manager.entities.companies.repository.CompanyRepository;
 import com.deploy.manager.infra.HandlerErros.NotFoundCustomException.NotFoundCustomException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -21,17 +23,24 @@ import java.util.stream.Collectors;
 public class ApplicationCompanyServices {
 	@Autowired
 	private ApplicationCompanyRepository applicationCompanyRepository;
+	@Autowired
+	private CompanyRepository companyRepository;
+	@Autowired
+	private ApplicationRepository applicationRepository;
 
 	@Transactional
-	public ApplicationCompanyModel create(ApplicationCompanyDTO applicationCompanyDTO) {
-		ApplicationCompanyModel applicationCompany = new ApplicationCompanyModel();
-		BeanUtils.copyProperties(applicationCompanyDTO, applicationCompany);
-		return applicationCompanyRepository.save(applicationCompany);
+	public ApplicationCompanyModel create(ApplicationCompanyDTO dto) {
+		ApplicationCompanyModel model = new ApplicationCompanyModel();
+
+		BeanUtils.copyProperties(dto, model);
+		var modelValidated = validateIfApplicationCompanyExists(dto, model);
+
+		return applicationCompanyRepository.save(modelValidated);
 	}
 
 	@Transactional
 	public ApplicationCompanyModel updateById(Long id, ApplicationCompanyDTO applicationCompanyDTO) {
-		validateIfApplicationCompanyNotExistsById(id);
+		validateIfContractNotExistsById(id);
 		ApplicationCompanyModel applicationCompany = new ApplicationCompanyModel();
 		applicationCompanyDTO.setId(id);
 		BeanUtils.copyProperties(applicationCompanyDTO, applicationCompany);
@@ -57,33 +66,50 @@ public class ApplicationCompanyServices {
 	}
 
 	public ApplicationCompanyDTO findById(Long id) {
-		validateIfApplicationCompanyNotExistsById(id);
+		validateIfContractNotExistsById(id);
 		Optional<ApplicationCompanyModel> applicationCompanyOptional = applicationCompanyRepository.findById(id);
 		ApplicationCompanyModel applicationCompany = applicationCompanyOptional.get();
 		return convertModelToDTO(applicationCompany);
 	}
 
 	public String deleteById(Long id) {
-		validateIfApplicationCompanyNotExistsById(id);
+		validateIfContractNotExistsById(id);
 		applicationCompanyRepository.deleteById(id);
-		return "ApplicationCompany deleted " + id;
+		return "Contract deleted of id " + id;
 	}
 
-	private ApplicationCompanyDTO convertModelToDTO(ApplicationCompanyModel applicationCompany) {
+	private ApplicationCompanyDTO convertModelToDTO(ApplicationCompanyModel model) {
 		ApplicationCompanyDTO applicationCompanyDTO = new ApplicationCompanyDTO();
-		applicationCompanyDTO.setId(applicationCompany.getId());
-		applicationCompanyDTO.setIdCompanies(applicationCompany.getCompany().getId());
-		applicationCompanyDTO.setIdApplications(applicationCompany.getApplication().getId());
-		applicationCompanyDTO.setNotesFrontend(applicationCompany.getNotesFrontend());
-		applicationCompanyDTO.setNotesBackend(applicationCompany.getNotesBackend());
-		applicationCompanyDTO.setStatus(applicationCompany.getStatus());
+		applicationCompanyDTO.setId(model.getId());
+		applicationCompanyDTO.setApplication(model.getApplication());
+		applicationCompanyDTO.setCompany(model.getCompany());
+		applicationCompanyDTO.setNotesFrontend(model.getNotesFrontend());
+		applicationCompanyDTO.setNotesBackend(model.getNotesBackend());
+		applicationCompanyDTO.setStatus(model.getStatus());
 		return applicationCompanyDTO;
 	}
 
-	private void validateIfApplicationCompanyNotExistsById(Long id) {
+	private void validateIfContractNotExistsById(Long id) {
 		Optional<ApplicationCompanyModel> applicationCompanyFound = applicationCompanyRepository.findById(id);
 		if (applicationCompanyFound.isEmpty()) {
-			throw new NotFoundCustomException("ApplicationCompany not found with id: " + id);
+			throw new NotFoundCustomException("Contract not found with id: " + id);
 		}
+	}
+
+	private ApplicationCompanyModel validateIfApplicationCompanyExists(ApplicationCompanyDTO dto,ApplicationCompanyModel model) {
+		if (dto.getCompanyId() != null) {
+			var company = companyRepository.findById(dto.getCompanyId())
+					.orElseThrow(() -> new NotFoundCustomException("Company not found"));
+			model.setCompany(company);
+		}
+
+		if (dto.getApplicationId() != null) {
+			var application = applicationRepository.findById(dto.getApplicationId())
+					.orElseThrow(() -> new NotFoundCustomException("Application not found"));
+			model.setApplication(application);
+		}
+
+		return model;
+
 	}
 }

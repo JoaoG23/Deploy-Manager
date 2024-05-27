@@ -4,9 +4,7 @@ import com.deploy.manager.entities.applications.dtos.ApplicationDTO;
 import com.deploy.manager.entities.applications.repository.ApplicationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,9 +30,11 @@ class ApplicationsControllerTest {
 	private ApplicationRepository applicationRepository;
 
 	@BeforeEach
+	@AfterAll
 	void deleteAll() {
 		applicationRepository.deleteAll();
 	}
+
 
 	@Test
 	@DisplayName("Create one app with success and return 204")
@@ -140,7 +140,12 @@ class ApplicationsControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Descrição da aplicação"));
 	}
 
+
 	private String createApplication() throws Exception {
+	/*
+	Created this way for
+	don't instance service Class
+	 */
 		ObjectMapper objectMapper = new ObjectMapper();
 		ApplicationDTO applicationDTO = applicationReturned();
 
