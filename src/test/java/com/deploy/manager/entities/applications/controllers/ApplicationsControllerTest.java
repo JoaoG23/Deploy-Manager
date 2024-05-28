@@ -30,7 +30,7 @@ class ApplicationsControllerTest {
 	private ApplicationRepository applicationRepository;
 
 	@BeforeEach
-	@AfterAll
+	@AfterEach
 	void deleteAll() {
 		applicationRepository.deleteAll();
 	}

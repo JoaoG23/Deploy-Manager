@@ -4,10 +4,7 @@ import com.deploy.manager.entities.companies.dtos.CompanyDTO;
 import com.deploy.manager.entities.companies.repository.CompanyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +27,9 @@ class CompanyControllerTest {
 	@Autowired
 	private CompanyRepository companyRepository;
 
+
 	@BeforeEach
+	@AfterEach
 	void deleteAll() {
 		companyRepository.deleteAll();
 	}

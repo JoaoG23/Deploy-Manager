@@ -33,18 +33,21 @@ public class ApplicationCompanyServices {
 		ApplicationCompanyModel model = new ApplicationCompanyModel();
 
 		BeanUtils.copyProperties(dto, model);
-		var modelValidated = validateIfApplicationCompanyExists(dto, model);
-
+		var modelValidated = validateIfExistAndBuildApplicationCompanyModel(dto, model);
 		return applicationCompanyRepository.save(modelValidated);
 	}
 
 	@Transactional
-	public ApplicationCompanyModel updateById(Long id, ApplicationCompanyDTO applicationCompanyDTO) {
+	public ApplicationCompanyModel updateById(Long id, ApplicationCompanyDTO dto) {
 		validateIfContractNotExistsById(id);
-		ApplicationCompanyModel applicationCompany = new ApplicationCompanyModel();
-		applicationCompanyDTO.setId(id);
-		BeanUtils.copyProperties(applicationCompanyDTO, applicationCompany);
-		return applicationCompanyRepository.save(applicationCompany);
+
+		ApplicationCompanyModel model = new ApplicationCompanyModel();
+		dto.setId(id);
+
+		BeanUtils.copyProperties(dto, model);
+
+		var modelValidated = validateIfExistAndBuildApplicationCompanyModel(dto, model);
+		return applicationCompanyRepository.save(modelValidated);
 	}
 
 	public List<ApplicationCompanyDTO> findAll() {
@@ -79,24 +82,24 @@ public class ApplicationCompanyServices {
 	}
 
 	private ApplicationCompanyDTO convertModelToDTO(ApplicationCompanyModel model) {
-		ApplicationCompanyDTO applicationCompanyDTO = new ApplicationCompanyDTO();
-		applicationCompanyDTO.setId(model.getId());
-		applicationCompanyDTO.setApplication(model.getApplication());
-		applicationCompanyDTO.setCompany(model.getCompany());
-		applicationCompanyDTO.setNotesFrontend(model.getNotesFrontend());
-		applicationCompanyDTO.setNotesBackend(model.getNotesBackend());
-		applicationCompanyDTO.setStatus(model.getStatus());
-		return applicationCompanyDTO;
+		ApplicationCompanyDTO dto = new ApplicationCompanyDTO();
+		dto.setId(model.getId());
+		dto.setApplication(model.getApplication());
+		dto.setCompany(model.getCompany());
+		dto.setNotesFrontend(model.getNotesFrontend());
+		dto.setNotesBackend(model.getNotesBackend());
+		dto.setStatus(model.getStatus());
+		return dto;
 	}
 
 	private void validateIfContractNotExistsById(Long id) {
-		Optional<ApplicationCompanyModel> applicationCompanyFound = applicationCompanyRepository.findById(id);
-		if (applicationCompanyFound.isEmpty()) {
+		Optional<ApplicationCompanyModel> contractFouded = applicationCompanyRepository.findById(id);
+		if (contractFouded.isEmpty()) {
 			throw new NotFoundCustomException("Contract not found with id: " + id);
 		}
 	}
 
-	private ApplicationCompanyModel validateIfApplicationCompanyExists(ApplicationCompanyDTO dto,ApplicationCompanyModel model) {
+	private ApplicationCompanyModel validateIfExistAndBuildApplicationCompanyModel(ApplicationCompanyDTO dto,ApplicationCompanyModel model) {
 		if (dto.getCompanyId() != null) {
 			var company = companyRepository.findById(dto.getCompanyId())
 					.orElseThrow(() -> new NotFoundCustomException("Company not found"));
@@ -110,6 +113,5 @@ public class ApplicationCompanyServices {
 		}
 
 		return model;
-
 	}
 }

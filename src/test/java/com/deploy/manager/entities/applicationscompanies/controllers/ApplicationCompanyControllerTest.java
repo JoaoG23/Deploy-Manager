@@ -11,10 +11,7 @@ import com.deploy.manager.entities.companies.model.CompanyModel;
 import com.deploy.manager.entities.companies.repository.CompanyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,12 +41,13 @@ class ApplicationCompanyControllerTest {
 	private CompanyRepository companyRepository;
 
 	@BeforeEach
-	@AfterAll
+	@AfterEach
 	void deleteAll() {
 		applicationCompanyRepository.deleteAll();
 		applicationRepository.deleteAll();
 		companyRepository.deleteAll();
 	}
+
 
 	@Test
 	@DisplayName("Create one app for compay with success and return 204")
@@ -77,7 +75,7 @@ class ApplicationCompanyControllerTest {
 	}
 
 	@Test
-	@DisplayName("Update an app successfully and return 200")
+	@DisplayName("Update an contract successfully and return 200")
 	void updateOneCase1() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -102,9 +100,33 @@ class ApplicationCompanyControllerTest {
 						.content(objectMapper.writeValueAsString(appForCompany)))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.company").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.application").exists())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.notesFrontend").value("EDITADO Front"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.notesBackend").value("EDITADO Back"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("RODANDO"));
+	}
+
+	@Test
+	@DisplayName("Erro to update a contract that don't exist and return 400")
+	void updateOneCase2() throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		Long id = 10L;
+
+		var appForCompany = new ApplicationCompanyDTO();
+		appForCompany.setCompanyId(1L);
+		appForCompany.setApplicationId(1L);
+		appForCompany.setNotesFrontend("EDITADO Front");
+		appForCompany.setNotesBackend("EDITADO Back");
+		appForCompany.setStatus(StatusApplication.valueOf("RODANDO"));
+
+		mockMvc.perform(MockMvcRequestBuilders.put("/application-companies/{id}", id)
+						.contentType(MediaType.APPLICATION_JSON)
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+						.content(objectMapper.writeValueAsString(appForCompany)))
+				.andExpect(MockMvcResultMatchers.status().isNotFound())
+				.andExpect(MockMvcResultMatchers.content().string("Contract not found with id: " + id));
 	}
 
 	@Test
