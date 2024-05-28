@@ -1,4 +1,4 @@
-# Projeto Gerenciador de Deploys Aplicação
+# Projeto Gerenciador de Deploys Aplicação 🧑🏽‍💼
 
 O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma ferramenta que facilite e gerencie os informações deploys de aplicações.
 
@@ -6,7 +6,7 @@ O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma f
 
 - [X]  Um usuário deve poder fazer login no sistema usando seu nome de usuário e senha
 - [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma usuário
-- [ ]  Usuário poderá cadastrar, editar, visualizar, deletar uma empresa
+- [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma empresa
 - [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma aplicação
 
 ### Não Funcionais
@@ -17,7 +17,7 @@ Aqui serão descritos os requisitos não funcionais do projeto, estes são os cr
 - [X]  Implementação de autenticação JWT para garantir a segurança dos dados do usuário
 
 
-## Tecnologias utilizadas
+## Tecnologias utilizadas 🪄
 
   [![Insomnia](https://img.shields.io/badge/Insomnia-5849BE?style=for-the-badge&logo=insomnia&logoColor=white)](https://insomnia.rest/)
   [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
@@ -28,8 +28,7 @@ Aqui serão descritos os requisitos não funcionais do projeto, estes são os cr
   [![PostgresSQL](https://img.shields.io/badge/PostgresSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 
-
-## Como instalar
+## Como instalar 🔑
 
 Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
@@ -42,12 +41,20 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
 2. Configurar o arquivo `application.properties` para as configurações do banco de dados (localizado em `src/main/resources`):
 
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/deploy_manager
-   spring.datasource.username=seu_usuario
-   spring.datasource.password=sua_senha
-   spring.jpa.hibernate.ddl-auto=update
-   ```
+    ```properties
+    # HIBERNATE
+    spring.datasource.url=jdbc:postgresql://localhost:5432/db_deploy_manager
+    spring.datasource.username=admin
+    spring.datasource.password=admin
+    
+    # SERVER
+    server.error.include-stacktrace=never
+    server.port=8081
+    server.servlet.contextPath=/api
+    
+    # TOKENS
+    api.security.token.secret=${JWT_Secret:joao}
+    ```
 
 3. Construir o projeto com Maven:
    ```bash
@@ -60,7 +67,7 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
    ```
 
 
-## Como usar
+## Como usar 👨🏽‍🏫
 
 1. Certifique-se de que o banco de dados PostgreSQL está configurado e em execução.
 2. No terminal, navegue até o diretório raiz do projeto.
@@ -73,7 +80,7 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 4. O servidor Spring Boot será iniciado e estará ouvindo as requisições na porta definida.
 
     ```bash
-    http://localhost:8080/login
+    http://localhost:8081/login
     ```
 
 5. Utilize as rotas e endpoints disponibilizados pelo servidor para gerenciar os processos de deploy.

@@ -4,14 +4,13 @@ import com.deploy.manager.entities.companies.dtos.CompanyDTO;
 import com.deploy.manager.entities.companies.repository.CompanyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class CompanyControllerTest {
 	private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkZXBsb3lzX21hbmFnZXJfYXBpIiwiaWF0IjoxNzE1MDkzMTIwLCJleHAiOjE5MDQzOTU3NjIsImF1ZCI6IiIsInN1YiI6ImpvYW8ifQ.WPZ7jg4n-iwrQ5lQJcSDBGjBj_0uMwo7WLcTOdTFmRI"; // replace this with your actual JWT
 
@@ -29,7 +29,9 @@ class CompanyControllerTest {
 	@Autowired
 	private CompanyRepository companyRepository;
 
+
 	@BeforeEach
+	@AfterEach
 	void deleteAll() {
 		companyRepository.deleteAll();
 	}
@@ -105,6 +107,7 @@ class CompanyControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].nameCompany").value("Company"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("Descrição da empresa"));
 	}
+
 	@Test
 	@DisplayName("Find all by page and return success 200")
 	void findByPageCase2() throws Exception {
@@ -118,6 +121,7 @@ class CompanyControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(1));
 	}
+
 	@Test
 	@DisplayName("Find one by id and return success 200")
 	void findOneByIdCase1() throws Exception {
