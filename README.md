@@ -32,7 +32,9 @@ Aqui serão descritos os requisitos não funcionais do projeto, estes são os cr
 
 Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
-**Backend (Spring Boot):**
+#### Backend (Spring Boot);
+
+`Ambiente DEVELOPER`
 
 1. Entrar na pasta do backend:
    ```bash
@@ -65,6 +67,52 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
    ```bash
    ./mvnw spring-boot:run
    ```
+   
+`Ambiente PRODUCTION DOCKER`
+
+1. Crie uma pasta chamada `db` neste diretório.
+2. Dentro desta pasta, crie dois arquivos:
+    - `db.env` com as seguintes informações:
+
+        ```
+        POSTGRES_USER=nome_usuario
+        POSTGRES_PASSWORD=senha
+        
+        ```
+
+    - `init.sql` com os seguintes comandos:
+      -- Substitua `nome_usuario` pelo nome do usuário selecionado para a aplicação.
+
+        ```
+        CREATE USER db_deploy_manager;
+        CREATE DATABASE db_deploy_manager;
+        GRANT ALL PRIVILEGES ON DATABASE db_deploy_manager TO nome_usuario;
+        
+        ```
+
+3. No arquivo `application-prod.properties`, altere as informações para corresponderem aos dados do seu banco:
+
+    ```
+    # JPA
+    spring.datasource.url=jdbc:postgresql://db-deploy-manager-container:5432/db_deploy_manager
+    spring.datasource.username=nome_usuario
+    spring.datasource.password=senha
+    
+    # SERVER
+    server.error.include-stacktrace=never
+    server.port=8080
+    server.servlet.contextPath=/api
+    
+    # TOKENS
+    api.security.token.secret=${JWT_Secret:joao}
+    
+    #spring.jpa.hibernate.ddl-auto=update
+    #spring.jpa.properties.hibernate.jdbc.lab.non_contextual_creation=true
+    #flyway.ignoreMigrationPatterns="repeatable:missing"
+    
+    ```
+
+4. Agora, apenas execute o comando `docker-compose up -d` no diretório raiz.
 
 
 ## Como usar 👨🏽‍🏫
