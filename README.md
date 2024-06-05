@@ -1,4 +1,4 @@
-# Projeto Gerenciador de Deploys Aplicação 🧑🏽‍💼
+# API Gerenciador de Deploys Aplicação 🧑🏽‍💼
 
 O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma ferramenta que facilite e gerencie os informações deploys de aplicações.
 
@@ -32,7 +32,9 @@ Aqui serão descritos os requisitos não funcionais do projeto, estes são os cr
 
 Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
-**Backend (Spring Boot):**
+#### Backend (Spring Boot);
+
+`Ambiente DEVELOPER`
 
 1. Entrar na pasta do backend:
    ```bash
@@ -65,6 +67,52 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
    ```bash
    ./mvnw spring-boot:run
    ```
+   
+`Ambiente PRODUCTION DOCKER`
+
+1. Crie uma pasta chamada `db` neste diretório.
+2. Dentro desta pasta, crie dois arquivos:
+    - `db.env` com as seguintes informações:
+
+        ```
+        POSTGRES_USER=nome_usuario
+        POSTGRES_PASSWORD=senha
+        
+        ```
+
+    - `init.sql` com os seguintes comandos:
+      -- Substitua `nome_usuario` pelo nome do usuário selecionado para a aplicação.
+
+        ```
+        CREATE USER db_deploy_manager;
+        CREATE DATABASE db_deploy_manager;
+        GRANT ALL PRIVILEGES ON DATABASE db_deploy_manager TO nome_usuario;
+        
+        ```
+
+3. No arquivo `application-prod.properties`, altere as informações para corresponderem aos dados do seu banco:
+
+    ```
+    # JPA
+    spring.datasource.url=jdbc:postgresql://db-deploy-manager-container:5432/db_deploy_manager
+    spring.datasource.username=nome_usuario
+    spring.datasource.password=senha
+    
+    # SERVER
+    server.error.include-stacktrace=never
+    server.port=8080
+    server.servlet.contextPath=/api
+    
+    # TOKENS
+    api.security.token.secret=${JWT_Secret:joao}
+    
+    #spring.jpa.hibernate.ddl-auto=update
+    #spring.jpa.properties.hibernate.jdbc.lab.non_contextual_creation=true
+    #flyway.ignoreMigrationPatterns="repeatable:missing"
+    
+    ```
+
+4. Agora, apenas execute o comando `docker-compose up -d` no diretório raiz.
 
 
 ## Como usar 👨🏽‍🏫
@@ -85,6 +133,7 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
 5. Utilize as rotas e endpoints disponibilizados pelo servidor para gerenciar os processos de deploy.
 
+Link documentação: https://doc-deploy-manager.netlify.app/#req_57f32835a4da4a64946ef9bff6a1330e
 
 1. **Acesse a Pasta de Documentos**:
     - Navegue até a pasta `/docs` no seu computador.

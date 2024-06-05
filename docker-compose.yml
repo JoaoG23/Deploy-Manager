@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  db:
+    build: "./db"
+    image: db-deploy-manager-image
+    restart: always
+    container_name: db-deploy-manager-container
+    env_file:
+      - ./db/db.env
+    networks:
+      - deploy-manager-network
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    ports:
+      - "5439:5432"
+  app:
+    depends_on:
+      - db
+    build:
+      context: "./"
+    working_dir: /usr/src/deploymanager
+    image: api-deploy-manager-image
+    container_name: api-deploy-manager-container
+    restart: on-failure
+    ports:
+      - "3003:8080"
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+    networks:
+      - deploy-manager-network
+networks:
+  deploy-manager-network:
