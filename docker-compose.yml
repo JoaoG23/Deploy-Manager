@@ -1,5 +1,4 @@
 version: "3.7"
-
 services:
   db:
     build: "./db"
@@ -11,18 +10,18 @@ services:
     networks:
       - deploy-manager-network
     volumes:
-      - ./backend/db/data:/var/lib/postgresql/data
+      - ./db/data:/var/lib/postgresql/data
     ports:
-      - "5438:5432"
+      - "5439:5432"
   app:
     depends_on:
       - db
     build:
       context: "./"
     working_dir: /usr/src/deploymanager
-    container_name: api-deploy-manager-contaier
+    image: api-deploy-manager-image
+    container_name: api-deploy-manager-container
     restart: on-failure
-    env_file: ./.env
     ports:
       - "3003:8080"
     volumes:
@@ -32,4 +31,4 @@ services:
     networks:
       - deploy-manager-network
 networks:
-  fx-financas-network:
+  deploy-manager-network:

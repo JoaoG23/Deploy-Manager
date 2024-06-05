@@ -1,6 +1,6 @@
 FROM maven:3.8.3-openjdk-17
 
-ENV PROJECT_HOME /usr/src/
+ENV PROJECT_HOME /usr/src/deploymanager
 ENV JAR_NAME deploymanager.jar
 
 # Create destination directory
@@ -17,5 +17,3 @@ RUN mvn clean package -DskipTests
 RUN mv $PROJECT_HOME/target/$JAR_NAME $PROJECT_HOME/
 
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "deploymanager.jar"]
-
-#Deploy-Manager-0.0.1-SNAPSHOT.jar
