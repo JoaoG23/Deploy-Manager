@@ -1,4 +1,4 @@
-# Projeto Gerenciador de Deploys Aplicação 🧑🏽‍💼
+# API Gerenciador de Deploys Aplicação 🧑🏽‍💼
 
 O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma ferramenta que facilite e gerencie os informações deploys de aplicações.
 
@@ -133,6 +133,7 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
 5. Utilize as rotas e endpoints disponibilizados pelo servidor para gerenciar os processos de deploy.
 
+Link documentação: https://doc-deploy-manager.netlify.app/#req_57f32835a4da4a64946ef9bff6a1330e
 
 1. **Acesse a Pasta de Documentos**:
     - Navegue até a pasta `/docs` no seu computador.
