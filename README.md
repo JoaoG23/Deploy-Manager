@@ -2,21 +2,6 @@
 
 O projeto do Gerenciador de Deploys de Aplicação tem como objetivo criar uma ferramenta que facilite e gerencie os informações deploys de aplicações.
 
-### Requisitos Funcionais
-
-- [X]  Um usuário deve poder fazer login no sistema usando seu nome de usuário e senha
-- [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma usuário
-- [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma empresa
-- [X]  Usuário poderá cadastrar, editar, visualizar, deletar uma aplicação
-
-### Não Funcionais
-
-Aqui serão descritos os requisitos não funcionais do projeto, estes são os critérios que não se relacionam diretamente com o comportamento específico do sistema, mas com a qualidade do sistema como um todo.
-
-- [X]  Uso de criptografia **[Bcrypt](https://www.npmjs.com/package/bcrypt)** para senhas, a fim de proteger as informações confidenciais do usuário
-- [X]  Implementação de autenticação JWT para garantir a segurança dos dados do usuário
-
-
 ## Tecnologias utilizadas 🪄
 
   [![Insomnia](https://img.shields.io/badge/Insomnia-5849BE?style=for-the-badge&logo=insomnia&logoColor=white)](https://insomnia.rest/)
@@ -72,7 +57,7 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
 
 1. Crie uma pasta chamada `db` neste diretório.
 2. Dentro desta pasta, crie dois arquivos:
-    - `db.env` com as seguintes informações:
+   `db.env` com as seguintes informações:
 
         ```
         POSTGRES_USER=nome_usuario
@@ -80,7 +65,7 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
         
         ```
 
-    - `init.sql` com os seguintes comandos:
+   `init.sql` com os seguintes comandos:
       -- Substitua `nome_usuario` pelo nome do usuário selecionado para a aplicação.
 
         ```
@@ -113,9 +98,6 @@ Para configurar o projeto Deploy-manager, siga as instruções abaixo:
     ```
 
 4. Agora, apenas execute o comando `docker-compose up -d` no diretório raiz.
-
-
-## Como usar 👨🏽‍🏫
 
 1. Certifique-se de que o banco de dados PostgreSQL está configurado e em execução.
 2. No terminal, navegue até o diretório raiz do projeto.
@@ -155,6 +137,28 @@ Link documentação: https://doc-deploy-manager.netlify.app/#req_57f32835a4da4a6
     - Após a importação, verifique se a coleção foi adicionada corretamente no Insomnia.
 
 Pronto! A coleção deve estar agora disponível no Insomnia para você utilizar.
+
+## Como usar 👨🏽‍🏫
+**Voce pode:**
+
+* Cadastrar aplicativos
+* Adicionar empresas
+* Colocar observações sobre o uso do aplicativo
+* Definir o status do aplicativo (parado ou rodando)
+
+**Benefícios:**
+
+* Organizar e centralizar as informações sobre seus aplicativos
+* Monitorar o status de uso de cada aplicativo
+* Facilitar a comunicação entre diferentes equipes sobre o uso dos aplicativos
+* Identificar gargalos e problemas com o uso dos aplicativos
+* Tomar decisões mais informadas sobre o uso dos aplicativos
+
+**Exemplo de uso:**
+
+* Uma equipe de TI pode usar o sistema para cadastrar todos os aplicativos utilizados na empresa, adicionar as empresas que os utilizam e colocar observações sobre o uso de cada aplicativo.
+* Um gerente pode usar o sistema para verificar o status de uso de cada aplicativo e identificar quais aplicativos estão parados ou com problemas.
+* Uma equipe de suporte pode usar o sistema para comunicar problemas com os aplicativos aos usuários e acompanhar a resolução dos problemas.
 
 ## Autor
 

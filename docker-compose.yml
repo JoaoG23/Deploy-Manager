@@ -3,7 +3,7 @@ services:
   db:
     build: "./db"
     image: db-deploy-manager-image
-    restart: always
+#    restart: always
     container_name: db-deploy-manager-container
     env_file:
       - ./db/db.env
